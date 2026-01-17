@@ -49,21 +49,32 @@ export default function OnboardingPage() {
       })
     : 0;
 
-  const totalPointsNeeded = startingWeight > goalWeight
-    ? calculateTotalPointsNeeded({ startingWeight, goalWeight })
+  // Determine mode
+  const isCutting = startingWeight > goalWeight;
+  const isBulking = goalWeight > startingWeight;
+  const weightDiff = Math.abs(startingWeight - goalWeight);
+
+  const totalPointsNeeded = weightDiff > 0
+    ? (weightDiff * 7700) / 1000
     : 0;
 
-  const dailyDeficit = tdee - targetCalories;
-  const expectedDailyPoints = dailyDeficit / 1000;
-  const weightToLose = startingWeight - goalWeight;
+  const dailyDifference = isCutting ? tdee - targetCalories : targetCalories - tdee;
+  const expectedDailyPoints = dailyDifference / 1000;
+  const weightToChange = weightDiff;
 
-  // Calorie target presets
+  // Calorie target presets - different for cutting vs bulking
   const caloriePresets = tdee > 0
-    ? [
-        { label: "Aggressive", calories: Math.round(tdee - 750), deficit: 750 },
-        { label: "Moderate", calories: Math.round(tdee - 500), deficit: 500 },
-        { label: "Slow & Steady", calories: Math.round(tdee - 300), deficit: 300 },
-      ]
+    ? isBulking
+      ? [
+          { label: "Aggressive", calories: Math.round(tdee + 500), surplus: 500 },
+          { label: "Moderate", calories: Math.round(tdee + 350), surplus: 350 },
+          { label: "Lean Bulk", calories: Math.round(tdee + 200), surplus: 200 },
+        ]
+      : [
+          { label: "Aggressive", calories: Math.round(tdee - 750), deficit: 750 },
+          { label: "Moderate", calories: Math.round(tdee - 500), deficit: 500 },
+          { label: "Slow & Steady", calories: Math.round(tdee - 300), deficit: 300 },
+        ]
     : [];
 
   const handleSubmit = async () => {
@@ -100,8 +111,10 @@ export default function OnboardingPage() {
   };
 
   const canProceedFromPersonal = heightCm >= 100 && heightCm <= 250 && age >= 16 && age <= 100;
-  const canProceedFromWeight = startingWeight > goalWeight && goalWeight > 0;
-  const canProceedFromCalories = targetCalories > 0 && targetCalories < tdee;
+  const canProceedFromWeight = startingWeight !== goalWeight && startingWeight > 0 && goalWeight > 0;
+  const canProceedFromCalories = targetCalories > 0 && (
+    isCutting ? targetCalories < tdee : targetCalories > tdee
+  );
 
   const renderStep = () => {
     switch (step) {
@@ -191,8 +204,12 @@ export default function OnboardingPage() {
             {canProceedFromWeight && (
               <div className="p-5 bg-muted/50 border text-sm space-y-2">
                 <p>
-                  <span className="text-muted-foreground">Weight to lose:</span>{" "}
-                  <span className="font-medium">{weightToLose.toFixed(1)} kg</span>
+                  <span className="text-muted-foreground">Mode:</span>{" "}
+                  <span className="font-medium">{isCutting ? "Cutting (Lose Weight)" : "Bulking (Gain Weight)"}</span>
+                </p>
+                <p>
+                  <span className="text-muted-foreground">Weight to {isCutting ? "lose" : "gain"}:</span>{" "}
+                  <span className="font-medium">{weightToChange.toFixed(1)} kg</span>
                 </p>
                 <p>
                   <span className="text-muted-foreground">Points needed:</span>{" "}
@@ -230,7 +247,9 @@ export default function OnboardingPage() {
 
             {/* Calorie Presets */}
             <div className="space-y-3">
-              <label className="text-sm font-medium block">Recommended Targets</label>
+              <label className="text-sm font-medium block">
+                Recommended {isBulking ? "Surplus" : "Deficit"} Targets
+              </label>
               <div className="grid grid-cols-3 gap-3">
                 {caloriePresets.map((preset) => (
                   <button
@@ -243,7 +262,9 @@ export default function OnboardingPage() {
                   >
                     <p className="text-xs text-muted-foreground mb-1">{preset.label}</p>
                     <p className="font-medium">{preset.calories}</p>
-                    <p className="text-xs text-muted-foreground">-{preset.deficit}/day</p>
+                    <p className="text-xs text-muted-foreground">
+                      {isBulking ? "+" : "-"}{"surplus" in preset ? preset.surplus : "deficit" in preset ? preset.deficit : 0}/day
+                    </p>
                   </button>
                 ))}
               </div>
@@ -264,11 +285,11 @@ export default function OnboardingPage() {
               </p>
             </div>
             
-            {dailyDeficit > 0 && targetCalories > 0 && (
+            {dailyDifference > 0 && targetCalories > 0 && (
               <div className="p-5 bg-muted/50 border text-sm space-y-2">
                 <p>
-                  <span className="text-muted-foreground">Daily deficit:</span>{" "}
-                  <span className="font-medium">{dailyDeficit} cal</span>
+                  <span className="text-muted-foreground">Daily {isBulking ? "surplus" : "deficit"}:</span>{" "}
+                  <span className="font-medium">{dailyDifference} cal</span>
                 </p>
                 <p>
                   <span className="text-muted-foreground">Points/day:</span>{" "}
