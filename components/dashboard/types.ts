@@ -1,6 +1,6 @@
 // Dashboard types
 export interface Stats {
-  mode: "cutting" | "bulking";
+  mode: "cutting" | "bulking" | "maintenance";
   summary: {
     startDate: string;
     daysElapsed: number;

@@ -1,11 +1,14 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { Trash2 } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { UserButton } from "@clerk/nextjs";
+
 interface DailyLog {
   id: number;
   date: string;
@@ -18,29 +21,34 @@ interface DailyLog {
   totalPoints: number;
   runningTotal: number;
 }
-export default function HistoryPage() {
+
+export default function LogsPage() {
   const router = useRouter();
   const [logs, setLogs] = useState<DailyLog[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [editingId, setEditingId] = useState<number | null>(null);
+  const [deletingId, setDeletingId] = useState<number | null>(null);
   const [editForm, setEditForm] = useState({
     caloriesConsumed: "",
     workoutCalories: "",
     weight: "",
     notes: "",
   });
+
   useEffect(() => {
     fetchLogs();
   }, []);
+
   const fetchLogs = async () => {
     try {
       const profileRes = await fetch("/api/profile");
       const profileData = await profileRes.json();
-      
+
       if (!profileData.profile) {
         router.push("/onboarding");
         return;
       }
+
       const response = await fetch("/api/logs");
       const data = await response.json();
       setLogs(data.logs || []);
@@ -50,6 +58,7 @@ export default function HistoryPage() {
       setIsLoading(false);
     }
   };
+
   const startEditing = (log: DailyLog) => {
     setEditingId(log.id);
     setEditForm({
@@ -59,6 +68,7 @@ export default function HistoryPage() {
       notes: log.notes || "",
     });
   };
+
   const handleUpdate = async (id: number) => {
     try {
       const response = await fetch("/api/logs", {
@@ -72,6 +82,7 @@ export default function HistoryPage() {
           notes: editForm.notes || undefined,
         }),
       });
+
       if (response.ok) {
         setEditingId(null);
         fetchLogs();
@@ -80,6 +91,26 @@ export default function HistoryPage() {
       console.error("Error updating log:", error);
     }
   };
+
+  const handleDelete = async (id: number) => {
+    if (!confirm("Delete this entry? This action cannot be undone.")) return;
+
+    setDeletingId(id);
+    try {
+      const response = await fetch(`/api/logs?id=${id}`, {
+        method: "DELETE",
+      });
+
+      if (response.ok) {
+        fetchLogs();
+      }
+    } catch (error) {
+      console.error("Error deleting log:", error);
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
@@ -87,6 +118,7 @@ export default function HistoryPage() {
       </div>
     );
   }
+
   return (
     <div className="min-h-screen bg-background">
       {/* Dotted grid background */}
@@ -98,6 +130,7 @@ export default function HistoryPage() {
           opacity: 0.1,
         }}
       />
+
       {/* Header */}
       <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-sm border-b">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -106,8 +139,8 @@ export default function HistoryPage() {
             <Link href="/dashboard" className="text-sm text-muted-foreground hover:text-foreground">
               Dashboard
             </Link>
-            <Link href="/history" className="text-sm font-medium text-foreground">
-              History
+            <Link href="/logs" className="text-sm font-medium text-foreground">
+              Logs
             </Link>
             <Link href="/settings" className="text-sm text-muted-foreground hover:text-foreground">
               Settings
@@ -116,12 +149,13 @@ export default function HistoryPage() {
           </nav>
         </div>
       </header>
+
       <main className="relative z-10 max-w-6xl mx-auto px-6 py-8">
         <Card className="border shadow-sm">
           <CardHeader>
             <p className="text-xl font-light tracking-tight">Log History</p>
             <p className="text-sm text-muted-foreground">
-              All your daily entries. Click a row to edit.
+              Click a row to edit. Use the trash icon to delete.
             </p>
           </CardHeader>
           <CardContent>
@@ -145,7 +179,7 @@ export default function HistoryPage() {
                       <th className="text-right py-3 px-2 font-medium text-muted-foreground">Daily</th>
                       <th className="text-right py-3 px-2 font-medium text-muted-foreground">Running</th>
                       <th className="text-right py-3 px-2 font-medium text-muted-foreground">Weight</th>
-                      <th className="text-left py-3 px-2 font-medium text-muted-foreground">Notes</th>
+                      <th className="py-3 px-2"></th>
                     </tr>
                   </thead>
                   <tbody>
@@ -198,26 +232,28 @@ export default function HistoryPage() {
                                 onClick={(e) => e.stopPropagation()}
                               />
                             </td>
-                            <td className="py-2 px-2 flex gap-2">
-                              <Button
-                                size="sm"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleUpdate(log.id);
-                                }}
-                              >
-                                Save
-                              </Button>
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  setEditingId(null);
-                                }}
-                              >
-                                Cancel
-                              </Button>
+                            <td className="py-2 px-2">
+                              <div className="flex gap-2">
+                                <Button
+                                  size="sm"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleUpdate(log.id);
+                                  }}
+                                >
+                                  Save
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setEditingId(null);
+                                  }}
+                                >
+                                  Cancel
+                                </Button>
+                              </div>
                             </td>
                           </>
                         ) : (
@@ -227,7 +263,8 @@ export default function HistoryPage() {
                             <td className="py-2 px-2 text-right">{log.workoutCalories || "—"}</td>
                             <td className="py-2 px-2 text-right">
                               <span className={log.dietPoints >= 0 ? "text-green-600" : "text-red-600"}>
-                                {log.dietPoints >= 0 ? "+" : ""}{log.dietPoints.toFixed(2)}
+                                {log.dietPoints >= 0 ? "+" : ""}
+                                {log.dietPoints.toFixed(2)}
                               </span>
                             </td>
                             <td className="py-2 px-2 text-right">
@@ -235,13 +272,26 @@ export default function HistoryPage() {
                             </td>
                             <td className="py-2 px-2 text-right">
                               <span className={log.totalPoints >= 0 ? "text-green-600" : "text-red-600"}>
-                                {log.totalPoints >= 0 ? "+" : ""}{log.totalPoints.toFixed(2)}
+                                {log.totalPoints >= 0 ? "+" : ""}
+                                {log.totalPoints.toFixed(2)}
                               </span>
                             </td>
-                            <td className="py-2 px-2 text-right font-medium">{log.runningTotal.toFixed(2)}</td>
+                            <td className="py-2 px-2 text-right font-medium">
+                              {log.runningTotal.toFixed(2)}
+                            </td>
                             <td className="py-2 px-2 text-right">{log.weight || "—"}</td>
-                            <td className="py-2 px-2 text-muted-foreground truncate max-w-[100px]">
-                              {log.notes || "—"}
+                            <td className="py-2 px-2">
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleDelete(log.id);
+                                }}
+                                disabled={deletingId === log.id}
+                                className="p-1 text-muted-foreground hover:text-red-600 transition-colors disabled:opacity-50"
+                                title="Delete entry"
+                              >
+                                <Trash2 size={16} />
+                              </button>
                             </td>
                           </>
                         )}

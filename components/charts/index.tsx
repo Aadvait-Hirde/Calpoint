@@ -18,10 +18,6 @@ import {
 } from "recharts";
 import type { ChartData } from "@/components/dashboard/types";
 
-interface ChartsProps {
-  data: ChartData;
-}
-
 const COLORS = ["#22c55e", "#3b82f6"];
 
 export function ProgressChart({ data }: { data: ChartData["progressData"] }) {
@@ -30,15 +26,14 @@ export function ProgressChart({ data }: { data: ChartData["progressData"] }) {
   return (
     <Card className="border shadow-sm">
       <CardHeader className="pb-2">
-        <p className="font-medium">Progress Chart</p>
-        <p className="text-xs text-muted-foreground">Cumulative points vs target trajectory</p>
+        <p className="font-medium text-sm">Progress</p>
       </CardHeader>
       <CardContent>
-        <ResponsiveContainer width="100%" height={250}>
+        <ResponsiveContainer width="100%" height={180}>
           <LineChart data={data}>
             <CartesianGrid strokeDasharray="3 3" stroke="hsl(210, 10%, 90%)" />
-            <XAxis dataKey="date" tick={{ fontSize: 11 }} tickFormatter={(v) => v.slice(5)} />
-            <YAxis tick={{ fontSize: 11 }} />
+            <XAxis dataKey="date" tick={{ fontSize: 10 }} tickFormatter={(v) => v.slice(5)} />
+            <YAxis tick={{ fontSize: 10 }} />
             <Tooltip />
             <Line type="monotone" dataKey="actual" stroke="#22c55e" strokeWidth={2} dot={false} name="Actual" />
             <Line type="monotone" dataKey="target" stroke="#9ca3af" strokeWidth={1} strokeDasharray="5 5" dot={false} name="Target" />
@@ -55,18 +50,17 @@ export function WeightChart({ data }: { data: ChartData["weightData"] }) {
   return (
     <Card className="border shadow-sm">
       <CardHeader className="pb-2">
-        <p className="font-medium">Weight Trend</p>
-        <p className="text-xs text-muted-foreground">Your weight over time</p>
+        <p className="font-medium text-sm">Weight</p>
       </CardHeader>
       <CardContent>
-        <ResponsiveContainer width="100%" height={250}>
+        <ResponsiveContainer width="100%" height={180}>
           <LineChart data={data}>
             <CartesianGrid strokeDasharray="3 3" stroke="hsl(210, 10%, 90%)" />
-            <XAxis dataKey="date" tick={{ fontSize: 11 }} tickFormatter={(v) => v.slice(5)} />
-            <YAxis tick={{ fontSize: 11 }} domain={["auto", "auto"]} />
+            <XAxis dataKey="date" tick={{ fontSize: 10 }} tickFormatter={(v) => v.slice(5)} />
+            <YAxis tick={{ fontSize: 10 }} domain={["auto", "auto"]} />
             <Tooltip />
-            <ReferenceLine y={data[0]?.goal} stroke="#22c55e" strokeDasharray="5 5" label={{ value: "Goal", fontSize: 10 }} />
-            <Line type="monotone" dataKey="weight" stroke="#3b82f6" strokeWidth={2} dot={{ r: 3 }} name="Weight" />
+            <ReferenceLine y={data[0]?.goal} stroke="#22c55e" strokeDasharray="5 5" />
+            <Line type="monotone" dataKey="weight" stroke="#3b82f6" strokeWidth={2} dot={{ r: 2 }} name="Weight" />
           </LineChart>
         </ResponsiveContainer>
       </CardContent>
@@ -80,18 +74,16 @@ export function DailyPointsChart({ data }: { data: ChartData["dailyPointsData"] 
   return (
     <Card className="border shadow-sm">
       <CardHeader className="pb-2">
-        <p className="font-medium">Daily Points</p>
-        <p className="text-xs text-muted-foreground">Points earned each day</p>
+        <p className="font-medium text-sm">Daily Points</p>
       </CardHeader>
       <CardContent>
-        <ResponsiveContainer width="100%" height={250}>
+        <ResponsiveContainer width="100%" height={180}>
           <BarChart data={data}>
             <CartesianGrid strokeDasharray="3 3" stroke="hsl(210, 10%, 90%)" />
-            <XAxis dataKey="date" tick={{ fontSize: 11 }} tickFormatter={(v) => v.slice(5)} />
-            <YAxis tick={{ fontSize: 11 }} />
+            <XAxis dataKey="date" tick={{ fontSize: 10 }} tickFormatter={(v) => v.slice(5)} />
+            <YAxis tick={{ fontSize: 10 }} />
             <Tooltip />
             <ReferenceLine y={0} stroke="#000" />
-            <ReferenceLine y={data[0]?.target} stroke="#9ca3af" strokeDasharray="5 5" />
             <Bar dataKey="points" name="Points" fill="#22c55e" radius={[2, 2, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
@@ -111,67 +103,39 @@ export function PointsBreakdownChart({ data }: { data: ChartData["pointsBreakdow
   return (
     <Card className="border shadow-sm">
       <CardHeader className="pb-2">
-        <p className="font-medium">Points Breakdown</p>
-        <p className="text-xs text-muted-foreground">Diet vs Workout contribution</p>
-      </CardHeader>
-      <CardContent className="flex items-center justify-center">
-        <ResponsiveContainer width={200} height={200}>
-          <PieChart>
-            <Pie
-              data={pieData}
-              cx="50%"
-              cy="50%"
-              innerRadius={50}
-              outerRadius={80}
-              dataKey="value"
-              label={({ name, percent }) => `${name} ${((percent ?? 0) * 100).toFixed(0)}%`}
-              labelLine={false}
-            >
-              {pieData.map((_, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index]} />
-              ))}
-            </Pie>
-            <Tooltip />
-          </PieChart>
-        </ResponsiveContainer>
-        <div className="ml-4 space-y-2 text-sm">
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 bg-green-500 rounded-full" />
-            <span>Diet: {data.diet.toFixed(2)} pts</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 bg-blue-500 rounded-full" />
-            <span>Workout: {data.workout.toFixed(2)} pts</span>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-  );
-}
-
-export function WeeklyChart({ data }: { data: ChartData["weeklyData"] }) {
-  if (data.length === 0) return null;
-
-  return (
-    <Card className="border shadow-sm">
-      <CardHeader className="pb-2">
-        <p className="font-medium">Weekly Average</p>
-        <p className="text-xs text-muted-foreground">Average points per day by week</p>
+        <p className="font-medium text-sm">Points Breakdown</p>
       </CardHeader>
       <CardContent>
-        <ResponsiveContainer width="100%" height={200}>
-          <BarChart data={data}>
-            <CartesianGrid strokeDasharray="3 3" stroke="hsl(210, 10%, 90%)" />
-            <XAxis dataKey="week" tick={{ fontSize: 11 }} tickFormatter={(v) => v.slice(5)} />
-            <YAxis tick={{ fontSize: 11 }} />
-            <Tooltip />
-            <Bar dataKey="avgPoints" name="Avg Points" radius={[2, 2, 0, 0]}>
-              {data.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={entry.onTrack ? "#22c55e" : "#ef4444"} />
-              ))}
-            </Bar>
-          </BarChart>
-        </ResponsiveContainer>
+        <div className="flex items-center gap-4">
+          <ResponsiveContainer width={120} height={120}>
+            <PieChart>
+              <Pie
+                data={pieData}
+                cx="50%"
+                cy="50%"
+                innerRadius={30}
+                outerRadius={50}
+                dataKey="value"
+                labelLine={false}
+              >
+                {pieData.map((_, index) => (
+                  <Cell key={`cell-${index}`} fill={COLORS[index]} />
+                ))}
+              </Pie>
+              <Tooltip />
+            </PieChart>
+          </ResponsiveContainer>
+          <div className="space-y-2 text-sm">
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 bg-green-500 rounded-full shrink-0" />
+              <span>Diet: {data.diet.toFixed(2)}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 bg-blue-500 rounded-full shrink-0" />
+              <span>Workout: {data.workout.toFixed(2)}</span>
+            </div>
+          </div>
+        </div>
       </CardContent>
     </Card>
   );
@@ -193,8 +157,7 @@ export function ActivityHeatmap({ data }: { data: ChartData["heatmapData"] }) {
   return (
     <Card className="border shadow-sm">
       <CardHeader className="pb-2">
-        <p className="font-medium">Activity Calendar</p>
-        <p className="text-xs text-muted-foreground">Your consistency over time</p>
+        <p className="font-medium text-sm">Activity</p>
       </CardHeader>
       <CardContent>
         <div className="flex flex-wrap gap-1">
@@ -202,23 +165,23 @@ export function ActivityHeatmap({ data }: { data: ChartData["heatmapData"] }) {
             <div
               key={day.date}
               title={`${day.date}: ${day.points.toFixed(2)} pts`}
-              className="w-4 h-4 rounded-sm"
+              className="w-3 h-3 rounded-sm"
               style={{ backgroundColor: getColor(day.level) }}
             />
           ))}
         </div>
-        <div className="flex items-center gap-4 mt-3 text-xs text-muted-foreground">
+        <div className="flex items-center gap-3 mt-2 text-xs text-muted-foreground">
           <span className="flex items-center gap-1">
-            <div className="w-3 h-3 rounded-sm bg-red-500" /> Surplus
+            <div className="w-2 h-2 rounded-sm bg-red-500" /> -
           </span>
           <span className="flex items-center gap-1">
-            <div className="w-3 h-3 rounded-sm bg-green-200" /> Low
+            <div className="w-2 h-2 rounded-sm bg-green-200" /> Low
           </span>
           <span className="flex items-center gap-1">
-            <div className="w-3 h-3 rounded-sm bg-green-500" /> Good
+            <div className="w-2 h-2 rounded-sm bg-green-500" /> Good
           </span>
           <span className="flex items-center gap-1">
-            <div className="w-3 h-3 rounded-sm bg-green-800" /> Great
+            <div className="w-2 h-2 rounded-sm bg-green-800" /> Great
           </span>
         </div>
       </CardContent>
@@ -226,14 +189,17 @@ export function ActivityHeatmap({ data }: { data: ChartData["heatmapData"] }) {
   );
 }
 
+interface ChartsProps {
+  data: ChartData;
+}
+
 export function Charts({ data }: ChartsProps) {
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <ProgressChart data={data.progressData} />
       <WeightChart data={data.weightData} />
       <DailyPointsChart data={data.dailyPointsData} />
       <PointsBreakdownChart data={data.pointsBreakdown} />
-      <WeeklyChart data={data.weeklyData} />
       <ActivityHeatmap data={data.heatmapData} />
     </div>
   );

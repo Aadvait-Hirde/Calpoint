@@ -45,8 +45,10 @@ export async function GET() {
     now.setHours(0, 0, 0, 0);
     const daysElapsed = Math.max(0, Math.floor((now.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)));
     
-    // Determine if cutting or bulking
-    const isCutting = profile.startingWeight > profile.goalWeight;
+    // Determine mode: cutting, bulking, or maintenance
+    const isMaintenance = profile.startingWeight === profile.goalWeight;
+    const isCutting = !isMaintenance && profile.startingWeight > profile.goalWeight;
+    const isBulking = !isMaintenance && profile.goalWeight > profile.startingWeight;
     const weightDiff = Math.abs(profile.startingWeight - profile.goalWeight);
     
     // Total points needed (always positive)
@@ -114,7 +116,7 @@ export async function GET() {
     });
 
     return NextResponse.json({
-      mode: isCutting ? "cutting" : "bulking",
+      mode: isMaintenance ? "maintenance" : isCutting ? "cutting" : "bulking",
       summary: {
         startDate: profile.startDate,
         daysElapsed,

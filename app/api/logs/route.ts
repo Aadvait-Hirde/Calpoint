@@ -201,3 +201,42 @@ export async function PATCH(request: Request) {
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
+
+export async function DELETE(request: Request) {
+  try {
+    const { userId } = await auth();
+    
+    if (!userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const profile = await db.query.userProfiles.findFirst({
+      where: eq(userProfiles.clerkId, userId),
+    });
+
+    if (!profile) {
+      return NextResponse.json({ error: "Profile not found" }, { status: 404 });
+    }
+
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get("id");
+
+    if (!id) {
+      return NextResponse.json({ error: "Log ID required" }, { status: 400 });
+    }
+
+    const [deleted] = await db
+      .delete(dailyLogs)
+      .where(and(eq(dailyLogs.id, Number(id)), eq(dailyLogs.userId, profile.id)))
+      .returning();
+
+    if (!deleted) {
+      return NextResponse.json({ error: "Log not found" }, { status: 404 });
+    }
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error("Error deleting log:", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+  }
+}

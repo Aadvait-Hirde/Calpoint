@@ -15,7 +15,7 @@ export function RecentEntries({ logs }: RecentEntriesProps) {
     <Card className="border shadow-sm">
       <CardHeader className="pb-2 flex flex-row items-center justify-between">
         <p className="font-medium">Recent Entries</p>
-        <Link href="/history" className="text-sm text-muted-foreground hover:text-foreground">
+        <Link href="/logs" className="text-sm text-muted-foreground hover:text-foreground">
           View all →
         </Link>
       </CardHeader>
