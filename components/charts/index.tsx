@@ -195,10 +195,9 @@ interface ChartsProps {
 
 export function Charts({ data }: ChartsProps) {
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 sticky top-24">
       <ProgressChart data={data.progressData} />
       <WeightChart data={data.weightData} />
-      <DailyPointsChart data={data.dailyPointsData} />
       <PointsBreakdownChart data={data.pointsBreakdown} />
       <ActivityHeatmap data={data.heatmapData} />
     </div>
