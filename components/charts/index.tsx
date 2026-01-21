@@ -101,38 +101,40 @@ export function PointsBreakdownChart({ data }: { data: ChartData["pointsBreakdow
   ];
 
   return (
-    <Card className="border shadow-sm">
+    <Card className="border shadow-sm overflow-hidden">
       <CardHeader className="pb-2">
         <p className="font-medium text-sm">Points Breakdown</p>
       </CardHeader>
-      <CardContent>
+      <CardContent className="pb-4">
         <div className="flex items-center gap-4">
-          <ResponsiveContainer width={120} height={120}>
-            <PieChart>
-              <Pie
-                data={pieData}
-                cx="50%"
-                cy="50%"
-                innerRadius={30}
-                outerRadius={50}
-                dataKey="value"
-                labelLine={false}
-              >
-                {pieData.map((_, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index]} />
-                ))}
-              </Pie>
-              <Tooltip />
-            </PieChart>
-          </ResponsiveContainer>
-          <div className="space-y-2 text-sm">
+          <div className="w-[100px] h-[100px] flex-shrink-0">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={pieData}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={25}
+                  outerRadius={45}
+                  dataKey="value"
+                  labelLine={false}
+                >
+                  {pieData.map((_, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index]} />
+                  ))}
+                </Pie>
+                <Tooltip />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+          <div className="space-y-2 text-sm min-w-0">
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 bg-green-500 rounded-full shrink-0" />
-              <span>Diet: {data.diet.toFixed(2)}</span>
+              <span className="truncate">Diet: {data.diet.toFixed(2)}</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 bg-blue-500 rounded-full shrink-0" />
-              <span>Workout: {data.workout.toFixed(2)}</span>
+              <span className="truncate">Workout: {data.workout.toFixed(2)}</span>
             </div>
           </div>
         </div>
@@ -155,22 +157,22 @@ export function ActivityHeatmap({ data }: { data: ChartData["heatmapData"] }) {
   };
 
   return (
-    <Card className="border shadow-sm">
+    <Card className="border shadow-sm overflow-hidden">
       <CardHeader className="pb-2">
         <p className="font-medium text-sm">Activity</p>
       </CardHeader>
-      <CardContent>
-        <div className="flex flex-wrap gap-1">
-          {data.map((day) => (
+      <CardContent className="pb-4">
+        <div className="flex flex-wrap gap-1 max-h-[80px] overflow-hidden">
+          {data.slice(-28).map((day) => (
             <div
               key={day.date}
               title={`${day.date}: ${day.points.toFixed(2)} pts`}
-              className="w-3 h-3 rounded-sm"
+              className="w-3 h-3 rounded-sm flex-shrink-0"
               style={{ backgroundColor: getColor(day.level) }}
             />
           ))}
         </div>
-        <div className="flex items-center gap-3 mt-2 text-xs text-muted-foreground">
+        <div className="flex items-center gap-3 mt-3 text-xs text-muted-foreground">
           <span className="flex items-center gap-1">
             <div className="w-2 h-2 rounded-sm bg-red-500" /> -
           </span>
@@ -195,7 +197,7 @@ interface ChartsProps {
 
 export function Charts({ data }: ChartsProps) {
   return (
-    <div className="space-y-4 sticky top-24">
+    <div className="space-y-4">
       <ProgressChart data={data.progressData} />
       <WeightChart data={data.weightData} />
       <PointsBreakdownChart data={data.pointsBreakdown} />

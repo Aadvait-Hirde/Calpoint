@@ -189,6 +189,9 @@ export default function SignUpPage() {
           </div>
         )}
 
+        {/* Clerk's CAPTCHA widget - must be outside conditional render */}
+        <div id="clerk-captcha" />
+
         {/* Sign up form */}
         <Card className="shadow-xl border">
           <CardContent className="pt-6">
@@ -251,7 +254,6 @@ export default function SignUpPage() {
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
-                  <div id="clerk-captcha" />
                   <div className="grid grid-cols-2 gap-4">
                     <Input
                       placeholder="First Name"

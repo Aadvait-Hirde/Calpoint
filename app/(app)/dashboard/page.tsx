@@ -97,28 +97,28 @@ export default function DashboardPage() {
         )}
 
         {/* Two Column Layout */}
-        <div className="grid lg:grid-cols-[1fr_380px] gap-6">
+        <div className="grid lg:grid-cols-[1fr_380px] gap-6 items-start">
           {/* Left Column - Main Content */}
           <div className="space-y-6">
             {/* Progress */}
             <ProgressCard stats={stats} />
-
-            {/* Quick Log Button */}
-            <Button onClick={() => setShowLogForm(!showLogForm)} className="w-full" size="lg">
-              {showLogForm ? "Cancel" : "Add Entry"}
-            </Button>
-
-            {/* Log Form */}
-            {showLogForm && <LogForm onLogSubmit={handleLogSubmit} />}
 
             {/* Stats Grid */}
             <StatCards stats={stats} />
 
             {/* Recent Logs */}
             <RecentEntries logs={recentLogs} />
+
+            {/* Quick Log Button - Now below Recent Entries */}
+            <Button onClick={() => setShowLogForm(!showLogForm)} className="w-full" size="lg">
+              {showLogForm ? "Cancel" : "Add Entry"}
+            </Button>
+
+            {/* Log Form */}
+            {showLogForm && <LogForm onLogSubmit={handleLogSubmit} />}
           </div>
 
-          {/* Right Column - Charts (always visible on lg+) */}
+          {/* Right Column - Charts */}
           <div className="hidden lg:block">
             {chartData && <Charts data={chartData} />}
           </div>
