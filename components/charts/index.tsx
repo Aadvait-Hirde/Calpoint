@@ -22,18 +22,18 @@ export function ProgressChart({ data }: { data: ChartData["progressData"] }) {
   if (data.length === 0) return null;
 
   return (
-    <Card className="border border-white/30 shadow-sm bg-white/20 backdrop-blur overflow-hidden">
+    <Card className="bg-black/60 backdrop-blur border-white/20 rounded-none overflow-hidden">
       <CardHeader className="pb-2">
-        <p className="font-medium text-sm">Progress</p>
+        <p className="text-xs text-white/70 uppercase tracking-wider">Progress</p>
       </CardHeader>
       <CardContent className="px-2">
         <div className="w-full flex justify-center">
           <ResponsiveContainer width="100%" height={180}>
             <LineChart data={data} margin={{ left: 0, right: 10 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="hsl(210, 10%, 90%)" />
-              <XAxis dataKey="date" tick={{ fontSize: 10 }} tickFormatter={(v) => v.slice(5)} />
-              <YAxis tick={{ fontSize: 10 }} width={35} />
-              <Tooltip />
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.2)" />
+              <XAxis dataKey="date" tick={{ fontSize: 10, fill: 'white' }} tickFormatter={(v) => v.slice(5)} stroke="rgba(255,255,255,0.3)" />
+              <YAxis tick={{ fontSize: 10, fill: 'white' }} width={35} stroke="rgba(255,255,255,0.3)" />
+              <Tooltip contentStyle={{ backgroundColor: 'rgba(0,0,0,0.8)', border: '1px solid rgba(255,255,255,0.2)', color: 'white' }} />
               <Line type="monotone" dataKey="actual" stroke="#22c55e" strokeWidth={2} dot={false} name="Actual" />
               <Line type="monotone" dataKey="target" stroke="#9ca3af" strokeWidth={1} strokeDasharray="5 5" dot={false} name="Target" />
             </LineChart>
@@ -48,18 +48,18 @@ export function WeightChart({ data }: { data: ChartData["weightData"] }) {
   if (data.length === 0) return null;
 
   return (
-    <Card className="border border-white/30 shadow-sm bg-white/20 backdrop-blur overflow-hidden">
+    <Card className="bg-black/60 backdrop-blur border-white/20 rounded-none overflow-hidden">
       <CardHeader className="pb-2">
-        <p className="font-medium text-sm">Weight</p>
+        <p className="text-xs text-white/70 uppercase tracking-wider">Weight</p>
       </CardHeader>
       <CardContent className="px-2">
         <div className="w-full flex justify-center">
           <ResponsiveContainer width="100%" height={180}>
             <LineChart data={data} margin={{ left: 0, right: 10 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="hsl(210, 10%, 90%)" />
-              <XAxis dataKey="date" tick={{ fontSize: 10 }} tickFormatter={(v) => v.slice(5)} />
-              <YAxis tick={{ fontSize: 10 }} domain={["auto", "auto"]} width={35} />
-              <Tooltip />
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.2)" />
+              <XAxis dataKey="date" tick={{ fontSize: 10, fill: 'white' }} tickFormatter={(v) => v.slice(5)} stroke="rgba(255,255,255,0.3)" />
+              <YAxis tick={{ fontSize: 10, fill: 'white' }} domain={["auto", "auto"]} width={35} stroke="rgba(255,255,255,0.3)" />
+              <Tooltip contentStyle={{ backgroundColor: 'rgba(0,0,0,0.8)', border: '1px solid rgba(255,255,255,0.2)', color: 'white' }} />
               <ReferenceLine y={data[0]?.goal} stroke="#22c55e" strokeDasharray="5 5" />
               <Line type="monotone" dataKey="weight" stroke="#3b82f6" strokeWidth={2} dot={{ r: 2 }} name="Weight" />
             </LineChart>
@@ -79,21 +79,21 @@ export function PointsBreakdownChart({ data }: { data: ChartData["pointsBreakdow
   ];
 
   return (
-    <Card className="border border-white/30 shadow-sm bg-white/20 backdrop-blur overflow-hidden">
+    <Card className="bg-black/60 backdrop-blur border-white/20 rounded-none overflow-hidden">
       <CardHeader className="pb-2">
-        <p className="font-medium text-sm">Points Breakdown</p>
+        <p className="text-xs text-white/70 uppercase tracking-wider">Points Breakdown</p>
       </CardHeader>
       <CardContent className="pb-4">
         <div className="flex items-center gap-4">
-          <div className="w-[100px] h-[100px] flex-shrink-0">
+          <div className="w-[140px] h-[140px] flex-shrink-0">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
                   data={pieData}
                   cx="50%"
                   cy="50%"
-                  innerRadius={25}
-                  outerRadius={45}
+                  innerRadius={35}
+                  outerRadius={65}
                   dataKey="value"
                   labelLine={false}
                 >
@@ -101,11 +101,11 @@ export function PointsBreakdownChart({ data }: { data: ChartData["pointsBreakdow
                     <Cell key={`cell-${index}`} fill={COLORS[index]} />
                   ))}
                 </Pie>
-                <Tooltip />
+                <Tooltip contentStyle={{ backgroundColor: 'rgba(0,0,0,0.8)', border: '1px solid rgba(255,255,255,0.2)', color: 'white' }} />
               </PieChart>
             </ResponsiveContainer>
           </div>
-          <div className="space-y-2 text-sm min-w-0">
+          <div className="space-y-2 text-sm min-w-0 text-white">
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 bg-green-500 rounded-full shrink-0" />
               <span className="truncate">Diet: {data.diet.toFixed(2)}</span>
@@ -146,9 +146,9 @@ export function ActivityHeatmap({ data, daysToGoal }: ActivityHeatmapProps) {
   if (totalSquares === 0) return null;
 
   return (
-    <Card className="border border-white/30 shadow-sm bg-white/20 backdrop-blur overflow-hidden">
+    <Card className="bg-black/60 backdrop-blur border-white/20 rounded-none overflow-hidden">
       <CardHeader className="pb-2">
-        <p className="font-medium text-sm">Activity</p>
+        <p className="text-xs text-white/70 uppercase tracking-wider">Activity</p>
       </CardHeader>
       <CardContent className="pb-4">
         <div className="flex flex-wrap gap-1.5">
@@ -166,11 +166,11 @@ export function ActivityHeatmap({ data, daysToGoal }: ActivityHeatmapProps) {
             <div
               key={`future-${i}`}
               title={`Day ${loggedDays + i + 1} (future)`}
-              className="w-4 h-4 rounded-sm flex-shrink-0 bg-gray-300 dark:bg-gray-600"
+              className="w-4 h-4 rounded-sm flex-shrink-0 bg-white/20"
             />
           ))}
         </div>
-        <div className="flex items-center gap-3 mt-3 text-xs text-muted-foreground">
+        <div className="flex items-center gap-3 mt-3 text-xs text-white/70">
           <span className="flex items-center gap-1">
             <div className="w-3 h-3 rounded-sm bg-red-500" /> Bad
           </span>
@@ -184,7 +184,7 @@ export function ActivityHeatmap({ data, daysToGoal }: ActivityHeatmapProps) {
             <div className="w-3 h-3 rounded-sm bg-green-500" /> Good
           </span>
           <span className="flex items-center gap-1">
-            <div className="w-3 h-3 rounded-sm bg-gray-300 dark:bg-gray-600" /> Future
+            <div className="w-3 h-3 rounded-sm bg-white/20" /> Future
           </span>
         </div>
       </CardContent>

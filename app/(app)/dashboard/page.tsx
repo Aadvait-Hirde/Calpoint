@@ -157,49 +157,48 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-4">
-      {/* Row 1: Add Entry + Progress Bar - Fixed height container */}
-      <div className="grid grid-cols-[160px_1fr] gap-4 h-[120px]">
-        {/* Add Entry Button / Form - Fixed height, no overflow */}
-        <div className="h-[120px] overflow-hidden">
+      {/* Row 1: Add Entry + Progress Bar - 50/50 split */}
+      <div className="grid grid-cols-2 gap-4 h-[140px]">
+        {/* Add Entry Button / Form - 50% width */}
+        <div className="h-full">
           {!showLogForm ? (
             <Button
               onClick={() => setShowLogForm(true)}
               variant="ghost"
-              className="w-full h-full rounded-none text-sm font-medium gap-2 bg-black/60 backdrop-blur border border-white/20 text-white hover:bg-black/70 hover:text-white"
+              className="w-full h-full rounded-none text-sm font-medium gap-2 bg-black/60 backdrop-blur border-white/20 text-white hover:bg-black/70 hover:text-white"
             >
               <Plus className="w-4 h-4" />
               Add Entry
             </Button>
           ) : (
-            <div className="h-full bg-black/60 backdrop-blur border border-white/20 p-3 flex flex-col">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-medium text-white">New Entry</span>
+            <div className="h-full bg-black/60 backdrop-blur border border-white/20 p-4 flex flex-col justify-center">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-xs text-white/70 uppercase tracking-wider">New Entry</span>
                 <button type="button" onClick={() => setShowLogForm(false)} className="text-white/70 hover:text-white">
-                  <X className="w-3 h-3" />
+                  <X className="w-4 h-4" />
                 </button>
               </div>
-              {formError && <div className="text-[10px] text-red-400 mb-1">{formError}</div>}
-              <form onSubmit={handleSubmit} className="flex-1 flex flex-col gap-1">
-                <div className="grid grid-cols-2 gap-1">
-                  <Input type="date" value={logDate} onChange={(e) => setLogDate(e.target.value)} className="h-5 text-[9px] px-1 bg-white/10 border-white/20 text-white" />
-                  <Input type="number" placeholder="Cal" value={logCalories} onChange={(e) => setLogCalories(e.target.value)} required className="h-5 text-[9px] px-1 bg-white/10 border-white/20 text-white placeholder:text-white/50" />
+              {formError && <div className="text-xs text-red-400 mb-2">{formError}</div>}
+              <form onSubmit={handleSubmit} className="space-y-3">
+                {/* All 5 fields in one row */}
+                <div className="flex gap-2">
+                  <Input type="date" value={logDate} onChange={(e) => setLogDate(e.target.value)} className="flex-1 h-8 text-xs px-2 bg-white/10 border-white/20 text-white [&::-webkit-calendar-picker-indicator]:invert" />
+                  <Input type="number" placeholder="Calories" value={logCalories} onChange={(e) => setLogCalories(e.target.value)} required className="flex-1 h-8 text-xs px-2 bg-white/10 border-white/20 text-white placeholder:text-white/50" />
+                  <Input type="number" placeholder="Workout" value={logWorkout} onChange={(e) => setLogWorkout(e.target.value)} className="flex-1 h-8 text-xs px-2 bg-white/10 border-white/20 text-white placeholder:text-white/50" />
+                  <Input type="number" step="0.1" placeholder="Weight" value={logWeight} onChange={(e) => setLogWeight(e.target.value)} className="flex-1 h-8 text-xs px-2 bg-white/10 border-white/20 text-white placeholder:text-white/50" />
+                  <Input placeholder="Notes" value={logNotes} onChange={(e) => setLogNotes(e.target.value)} className="flex-1 h-8 text-xs px-2 bg-white/10 border-white/20 text-white placeholder:text-white/50" />
                 </div>
-                <div className="grid grid-cols-2 gap-1">
-                  <Input type="number" placeholder="Wkout" value={logWorkout} onChange={(e) => setLogWorkout(e.target.value)} className="h-5 text-[9px] px-1 bg-white/10 border-white/20 text-white placeholder:text-white/50" />
-                  <Input type="number" step="0.1" placeholder="Wt" value={logWeight} onChange={(e) => setLogWeight(e.target.value)} className="h-5 text-[9px] px-1 bg-white/10 border-white/20 text-white placeholder:text-white/50" />
-                </div>
-                <Input placeholder="Notes" value={logNotes} onChange={(e) => setLogNotes(e.target.value)} className="h-5 text-[9px] px-1 bg-white/10 border-white/20 text-white placeholder:text-white/50" />
-                <Button type="submit" disabled={isSubmitting} size="sm" className="h-5 text-[9px] w-full">
-                  {isSubmitting ? "..." : "Save"}
+                <Button type="submit" disabled={isSubmitting} size="sm" className="h-8 text-xs w-full">
+                  {isSubmitting ? "Saving..." : "Save"}
                 </Button>
               </form>
             </div>
           )}
         </div>
 
-        {/* Progress Bar Card */}
-        <Card className="bg-black/60 backdrop-blur border-white/20 rounded-none h-[120px]">
-          <CardContent className="p-4 flex items-center gap-6 h-full">
+        {/* Progress Bar Card - 50% width */}
+        <Card className="bg-black/60 backdrop-blur border-white/20 rounded-none h-[140px]">
+          <CardContent className="p-4 flex items-center h-full">
             <div className="flex-1 space-y-2">
               <div className="flex items-center justify-between">
                 <div>

@@ -92,37 +92,39 @@ export default function SettingsPage() {
     <div className="max-w-2xl mx-auto">
       <Card className="bg-black/60 backdrop-blur border-white/20 rounded-none">
         <CardHeader>
-          <p className="text-xl font-light tracking-tight">Profile Settings</p>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-xl font-light tracking-tight text-white">Profile Settings</p>
+          <p className="text-sm text-white/70">
             Update your stats and goals. Changes will affect future calculations.
           </p>
         </CardHeader>
         <CardContent className="space-y-6">
           {/* Personal Info */}
           <div className="space-y-4">
-            <p className="text-sm font-medium text-muted-foreground uppercase tracking-tight">
+            <p className="text-sm font-medium text-white/70 uppercase tracking-tight">
               Personal Info
             </p>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <label className="text-sm font-medium">Height (cm)</label>
+                <label className="text-sm font-medium text-white">Height (cm)</label>
                 <Input
                   type="number"
                   value={profile.heightCm}
                   onChange={(e) => setProfile({ ...profile, heightCm: Number(e.target.value) })}
+                  className="bg-white/10 border-white/20 text-white"
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium">Age</label>
+                <label className="text-sm font-medium text-white">Age</label>
                 <Input
                   type="number"
                   value={profile.age}
                   onChange={(e) => setProfile({ ...profile, age: Number(e.target.value) })}
+                  className="bg-white/10 border-white/20 text-white"
                 />
               </div>
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-medium">Sex</label>
+              <label className="text-sm font-medium text-white">Sex</label>
               <div className="flex gap-4">
                 <Button
                   type="button"
@@ -146,12 +148,12 @@ export default function SettingsPage() {
 
           {/* Weight Goals */}
           <div className="space-y-4">
-            <p className="text-sm font-medium text-muted-foreground uppercase tracking-tight">
+            <p className="text-sm font-medium text-white/70 uppercase tracking-tight">
               Weight Goals
             </p>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <label className="text-sm font-medium">Starting Weight (kg)</label>
+                <label className="text-sm font-medium text-white">Starting Weight (kg)</label>
                 <Input
                   type="number"
                   step="0.1"
@@ -159,15 +161,17 @@ export default function SettingsPage() {
                   onChange={(e) =>
                     setProfile({ ...profile, startingWeight: Number(e.target.value) })
                   }
+                  className="bg-white/10 border-white/20 text-white"
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium">Goal Weight (kg)</label>
+                <label className="text-sm font-medium text-white">Goal Weight (kg)</label>
                 <Input
                   type="number"
                   step="0.1"
                   value={profile.goalWeight}
                   onChange={(e) => setProfile({ ...profile, goalWeight: Number(e.target.value) })}
+                  className="bg-white/10 border-white/20 text-white"
                 />
               </div>
             </div>
@@ -175,28 +179,29 @@ export default function SettingsPage() {
 
           {/* Calorie Targets */}
           <div className="space-y-4">
-            <p className="text-sm font-medium text-muted-foreground uppercase tracking-tight">
+            <p className="text-sm font-medium text-white/70 uppercase tracking-tight">
               Calorie Targets
             </p>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <label className="text-sm font-medium">TDEE (cal)</label>
+                <label className="text-sm font-medium text-white">TDEE (cal)</label>
                 <div className="flex gap-2">
-                  <Input type="number" value={profile.tdee} readOnly className="bg-muted/50" />
+                  <Input type="number" value={profile.tdee} readOnly className="bg-white/5 border-white/20 text-white/70" />
                   <Button variant="outline" onClick={recalculateTDEE}>
                     Recalc
                   </Button>
                 </div>
-                <p className="text-xs text-muted-foreground">Based on current weight</p>
+                <p className="text-xs text-white/50">Based on current weight</p>
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium">Target Calories (cal)</label>
+                <label className="text-sm font-medium text-white">Target Calories (cal)</label>
                 <Input
                   type="number"
                   value={profile.targetCalories}
                   onChange={(e) =>
                     setProfile({ ...profile, targetCalories: Number(e.target.value) })
                   }
+                  className="bg-white/10 border-white/20 text-white"
                 />
               </div>
             </div>
@@ -207,8 +212,8 @@ export default function SettingsPage() {
             <div
               className={`p-3 text-sm border rounded ${
                 message.includes("success")
-                  ? "text-green-600 bg-green-50 border-green-200"
-                  : "text-red-600 bg-red-50 border-red-200"
+                  ? "text-green-400 bg-green-500/10 border-green-500/30"
+                  : "text-red-400 bg-red-500/10 border-red-500/30"
               }`}
             >
               {message}

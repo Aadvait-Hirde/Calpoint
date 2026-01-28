@@ -121,16 +121,16 @@ export default function LogsPage() {
   return (
     <Card className="bg-black/60 backdrop-blur border-white/20 rounded-none">
       <CardHeader>
-        <p className="text-xl font-light tracking-tight">Log History</p>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-xl font-light tracking-tight text-white">Log History</p>
+        <p className="text-sm text-white/70">
           Click a row to edit. Use the trash icon to delete.
         </p>
       </CardHeader>
       <CardContent>
         {logs.length === 0 ? (
-          <div className="text-center py-12 text-muted-foreground">
+          <div className="text-center py-12 text-white/70">
             <p>No entries yet.</p>
-            <Link href="/dashboard" className="text-sm hover:underline">
+            <Link href="/dashboard" className="text-sm text-white/50 hover:text-white hover:underline">
               Go to dashboard to log your first entry →
             </Link>
           </div>
@@ -138,16 +138,16 @@ export default function LogsPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b">
-                  <th className="text-left py-3 px-2 font-medium text-muted-foreground">Date</th>
-                  <th className="text-right py-3 px-2 font-medium text-muted-foreground">Calories</th>
-                  <th className="text-right py-3 px-2 font-medium text-muted-foreground">Workout</th>
-                  <th className="text-right py-3 px-2 font-medium text-muted-foreground">Diet Pts</th>
-                  <th className="text-right py-3 px-2 font-medium text-muted-foreground">Work Pts</th>
-                  <th className="text-right py-3 px-2 font-medium text-muted-foreground">Daily</th>
-                  <th className="text-right py-3 px-2 font-medium text-muted-foreground">Running</th>
-                  <th className="text-right py-3 px-2 font-medium text-muted-foreground">Weight</th>
-                  <th className="text-left py-3 px-2 font-medium text-muted-foreground">Notes</th>
+                <tr className="border-b border-white/20">
+                  <th className="text-left py-3 px-2 font-medium text-white/70">Date</th>
+                  <th className="text-right py-3 px-2 font-medium text-white/70">Calories</th>
+                  <th className="text-right py-3 px-2 font-medium text-white/70">Workout</th>
+                  <th className="text-right py-3 px-2 font-medium text-white/70">Diet Pts</th>
+                  <th className="text-right py-3 px-2 font-medium text-white/70">Work Pts</th>
+                  <th className="text-right py-3 px-2 font-medium text-white/70">Daily</th>
+                  <th className="text-right py-3 px-2 font-medium text-white/70">Running</th>
+                  <th className="text-right py-3 px-2 font-medium text-white/70">Weight</th>
+                  <th className="text-left py-3 px-2 font-medium text-white/70">Notes</th>
                   <th className="py-3 px-2"></th>
                 </tr>
               </thead>
@@ -155,14 +155,14 @@ export default function LogsPage() {
                 {logs.map((log) => (
                   <tr
                     key={log.id}
-                    className={`border-b last:border-0 hover:bg-muted/50 cursor-pointer ${
-                      editingId === log.id ? "bg-muted/50" : ""
+                    className={`border-b border-white/10 last:border-0 hover:bg-white/5 cursor-pointer ${
+                      editingId === log.id ? "bg-white/10" : ""
                     }`}
                     onClick={() => editingId !== log.id && startEditing(log)}
                   >
                     {editingId === log.id ? (
                       <>
-                        <td className="py-2 px-2">{log.date}</td>
+                        <td className="py-2 px-2 text-white">{log.date}</td>
                         <td className="py-2 px-2">
                           <Input
                             type="number"
@@ -170,7 +170,7 @@ export default function LogsPage() {
                             onChange={(e) =>
                               setEditForm({ ...editForm, caloriesConsumed: e.target.value })
                             }
-                            className="w-20 h-8 text-right"
+                            className="w-20 h-8 text-right bg-white/10 border-white/20 text-white"
                             onClick={(e) => e.stopPropagation()}
                           />
                         </td>
@@ -181,14 +181,14 @@ export default function LogsPage() {
                             onChange={(e) =>
                               setEditForm({ ...editForm, workoutCalories: e.target.value })
                             }
-                            className="w-20 h-8 text-right"
+                            className="w-20 h-8 text-right bg-white/10 border-white/20 text-white"
                             onClick={(e) => e.stopPropagation()}
                           />
                         </td>
-                        <td className="py-2 px-2 text-right">—</td>
-                        <td className="py-2 px-2 text-right">—</td>
-                        <td className="py-2 px-2 text-right">—</td>
-                        <td className="py-2 px-2 text-right">—</td>
+                        <td className="py-2 px-2 text-right text-white/50">—</td>
+                        <td className="py-2 px-2 text-right text-white/50">—</td>
+                        <td className="py-2 px-2 text-right text-white/50">—</td>
+                        <td className="py-2 px-2 text-right text-white/50">—</td>
                         <td className="py-2 px-2">
                           <Input
                             type="number"
@@ -197,7 +197,7 @@ export default function LogsPage() {
                             onChange={(e) =>
                               setEditForm({ ...editForm, weight: e.target.value })
                             }
-                            className="w-16 h-8 text-right"
+                            className="w-16 h-8 text-right bg-white/10 border-white/20 text-white"
                             onClick={(e) => e.stopPropagation()}
                           />
                         </td>
@@ -207,7 +207,7 @@ export default function LogsPage() {
                             onChange={(e) =>
                               setEditForm({ ...editForm, notes: e.target.value })
                             }
-                            className="w-32 h-8"
+                            className="w-32 h-8 bg-white/10 border-white/20 text-white placeholder:text-white/50"
                             placeholder="Notes..."
                             onClick={(e) => e.stopPropagation()}
                           />
@@ -238,35 +238,35 @@ export default function LogsPage() {
                       </>
                     ) : (
                       <>
-                        <td className="py-2 px-2">{log.date}</td>
-                        <td className="py-2 px-2 text-right">{log.caloriesConsumed}</td>
-                        <td className="py-2 px-2 text-right">{log.workoutCalories || "—"}</td>
+                        <td className="py-2 px-2 text-white">{log.date}</td>
+                        <td className="py-2 px-2 text-right text-white">{log.caloriesConsumed}</td>
+                        <td className="py-2 px-2 text-right text-white">{log.workoutCalories || "—"}</td>
                         <td className="py-2 px-2 text-right">
-                          <span className={log.dietPoints >= 0 ? "text-green-600" : "text-red-600"}>
+                          <span className={log.dietPoints >= 0 ? "text-green-400" : "text-red-400"}>
                             {log.dietPoints >= 0 ? "+" : ""}
                             {log.dietPoints.toFixed(2)}
                           </span>
                         </td>
-                        <td className="py-2 px-2 text-right">
+                        <td className="py-2 px-2 text-right text-white">
                           {log.workoutPoints > 0 ? `+${log.workoutPoints.toFixed(2)}` : "—"}
                         </td>
                         <td className="py-2 px-2 text-right">
-                          <span className={log.totalPoints >= 0 ? "text-green-600" : "text-red-600"}>
+                          <span className={log.totalPoints >= 0 ? "text-green-400" : "text-red-400"}>
                             {log.totalPoints >= 0 ? "+" : ""}
                             {log.totalPoints.toFixed(2)}
                           </span>
                         </td>
-                        <td className="py-2 px-2 text-right font-medium">
+                        <td className="py-2 px-2 text-right font-medium text-white">
                           {log.runningTotal.toFixed(2)}
                         </td>
-                        <td className="py-2 px-2 text-right">{log.weight || "—"}</td>
+                        <td className="py-2 px-2 text-right text-white">{log.weight || "—"}</td>
                         <td className="py-2 px-2 max-w-[150px]">
                           {log.notes ? (
-                            <span className="truncate block text-muted-foreground" title={log.notes}>
+                            <span className="truncate block text-white/70" title={log.notes}>
                               {log.notes.length > 30 ? `${log.notes.slice(0, 30)}...` : log.notes}
                             </span>
                           ) : (
-                            <span className="text-muted-foreground/50">—</span>
+                            <span className="text-white/30">—</span>
                           )}
                         </td>
                         <td className="py-2 px-2">
@@ -276,7 +276,7 @@ export default function LogsPage() {
                               handleDelete(log.id);
                             }}
                             disabled={deletingId === log.id}
-                            className="p-1 text-muted-foreground hover:text-red-600 transition-colors disabled:opacity-50"
+                            className="p-1 text-white/50 hover:text-red-400 transition-colors disabled:opacity-50"
                             title="Delete entry"
                           >
                             <Trash2 size={16} />
