@@ -33,7 +33,7 @@ export function ProgressCard({ stats }: ProgressCardProps) {
   const hasProjectedDate = stats.pace.projectedCompletionDate !== null;
 
   return (
-    <Card className="border shadow-sm">
+    <Card className="border shadow-sm bg-card/95 backdrop-blur">
       <CardContent className="pt-6">
         <div className="space-y-6">
           {/* Top Row: Progress & Remaining */}

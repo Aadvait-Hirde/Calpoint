@@ -43,6 +43,7 @@ export interface DailyLog {
   caloriesConsumed: number;
   workoutCalories: number;
   weight: number | null;
+  notes?: string | null;
   dietPoints: number;
   workoutPoints: number;
   totalPoints: number;

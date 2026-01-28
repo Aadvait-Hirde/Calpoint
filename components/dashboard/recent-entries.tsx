@@ -12,7 +12,7 @@ export function RecentEntries({ logs }: RecentEntriesProps) {
   if (logs.length === 0) return null;
 
   return (
-    <Card className="border shadow-sm">
+    <Card className="border shadow-sm bg-card/95 backdrop-blur">
       <CardHeader className="pb-2 flex flex-row items-center justify-between">
         <p className="font-medium">Recent Entries</p>
         <Link href="/logs" className="text-sm text-muted-foreground hover:text-foreground">
@@ -29,6 +29,7 @@ export function RecentEntries({ logs }: RecentEntriesProps) {
                 <th className="text-right py-2 font-medium text-muted-foreground">Workout</th>
                 <th className="text-right py-2 font-medium text-muted-foreground">Points</th>
                 <th className="text-right py-2 font-medium text-muted-foreground">Total</th>
+                <th className="text-left py-2 pl-4 font-medium text-muted-foreground">Notes</th>
               </tr>
             </thead>
             <tbody>
@@ -44,6 +45,15 @@ export function RecentEntries({ logs }: RecentEntriesProps) {
                     </span>
                   </td>
                   <td className="py-2 text-right font-medium">{log.runningTotal.toFixed(2)}</td>
+                  <td className="py-2 pl-4 max-w-[120px]">
+                    {log.notes ? (
+                      <span className="truncate block text-muted-foreground" title={log.notes}>
+                        {log.notes.length > 25 ? `${log.notes.slice(0, 25)}...` : log.notes}
+                      </span>
+                    ) : (
+                      <span className="text-muted-foreground/50">—</span>
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>

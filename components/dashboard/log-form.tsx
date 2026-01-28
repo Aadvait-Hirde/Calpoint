@@ -9,8 +9,17 @@ interface LogFormProps {
   onLogSubmit: () => void;
 }
 
+// Get today's date in local timezone (avoids UTC offset issues)
+function getLocalDateString(): string {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, '0');
+  const day = String(today.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
 export function LogForm({ onLogSubmit }: LogFormProps) {
-  const [logDate, setLogDate] = useState(new Date().toISOString().split("T")[0]);
+  const [logDate, setLogDate] = useState(getLocalDateString());
   const [logCalories, setLogCalories] = useState("");
   const [logWorkoutCalories, setLogWorkoutCalories] = useState("");
   const [logWeight, setLogWeight] = useState("");
@@ -48,7 +57,7 @@ export function LogForm({ onLogSubmit }: LogFormProps) {
       setLogWorkoutCalories("");
       setLogWeight("");
       setLogNotes("");
-      setLogDate(new Date().toISOString().split("T")[0]);
+      setLogDate(getLocalDateString());
       onLogSubmit();
     } catch {
       setError("Something went wrong");
@@ -58,14 +67,14 @@ export function LogForm({ onLogSubmit }: LogFormProps) {
   };
 
   return (
-    <Card className="border shadow-sm">
+    <Card className="border shadow-sm bg-card/95 backdrop-blur">
       <CardHeader className="pb-2">
         <p className="font-medium">New Log Entry</p>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           {error && (
-            <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200">
+            <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded">
               {error}
             </div>
           )}

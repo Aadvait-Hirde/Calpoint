@@ -87,7 +87,7 @@ export function StatCards({ stats }: StatCardsProps) {
   return (
     <div className="grid gap-4 md:grid-cols-2">
       {/* Summary Card - Enhanced */}
-      <Card className="border shadow-sm">
+      <Card className="border border-white/30 shadow-sm bg-white/20 backdrop-blur">
         <CardContent className="pt-6">
           <div className="flex items-start justify-between mb-4">
             <div>
@@ -148,7 +148,7 @@ export function StatCards({ stats }: StatCardsProps) {
       </Card>
 
       {/* Points Card - Enhanced */}
-      <Card className="border shadow-sm">
+      <Card className="border border-white/30 shadow-sm bg-white/20 backdrop-blur">
         <CardContent className="pt-6">
           <div className="flex items-start justify-between mb-4">
             <div>
@@ -183,7 +183,7 @@ export function StatCards({ stats }: StatCardsProps) {
       </Card>
 
       {/* Pace Card - Enhanced with visual indicator */}
-      <Card className="border shadow-sm">
+      <Card className="border border-white/30 shadow-sm bg-white/20 backdrop-blur">
         <CardContent className="pt-6">
           <div className="flex items-start justify-between mb-4">
             <div>
@@ -246,7 +246,7 @@ export function StatCards({ stats }: StatCardsProps) {
       </Card>
 
       {/* Calories Card - Enhanced */}
-      <Card className="border shadow-sm">
+      <Card className="border border-white/30 shadow-sm bg-white/20 backdrop-blur">
         <CardContent className="pt-6">
           <div className="flex items-start justify-between mb-4">
             <div>
