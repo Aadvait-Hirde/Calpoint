@@ -35,6 +35,22 @@ export interface Stats {
     targetCalories: number;
     avgDailyDeficit: number;
   };
+  protein: {
+    target: number;
+    targetGPerKg: number;
+    currentWeight: number;
+    avgDaily: number;
+    daysLogged: number;
+    todayGrams: number | null;
+    todayRating: string | null;
+    ratingCounts: {
+      excellent: number;
+      good: number;
+      average: number;
+      below_average: number;
+      poor: number;
+    };
+  };
 }
 
 export interface DailyLog {
@@ -43,6 +59,7 @@ export interface DailyLog {
   caloriesConsumed: number;
   workoutCalories: number;
   weight: number | null;
+  proteinGrams: number | null;
   notes?: string | null;
   dietPoints: number;
   workoutPoints: number;

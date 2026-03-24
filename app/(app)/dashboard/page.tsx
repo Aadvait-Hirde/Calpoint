@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Plus, X } from "lucide-react";
+import { Plus, X, Beef } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -77,6 +77,7 @@ export default function DashboardPage() {
   const [logWorkout, setLogWorkout] = useState("");
   const [logWeight, setLogWeight] = useState("");
   const [logNotes, setLogNotes] = useState("");
+  const [logProtein, setLogProtein] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formError, setFormError] = useState("");
 
@@ -123,6 +124,7 @@ export default function DashboardPage() {
           caloriesConsumed: Number(logCalories),
           workoutCalories: Number(logWorkout) || 0,
           weight: logWeight ? Number(logWeight) : undefined,
+          proteinGrams: logProtein ? Number(logProtein) : undefined,
           notes: logNotes || undefined,
         }),
       });
@@ -134,6 +136,7 @@ export default function DashboardPage() {
       setLogCalories("");
       setLogWorkout("");
       setLogWeight("");
+      setLogProtein("");
       setLogNotes("");
       setLogDate(getLocalDateString());
       setShowLogForm(false);
@@ -157,10 +160,10 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-4">
-      {/* Row 1: Add Entry + Progress Bar - 50/50 split */}
-      <div className="grid grid-cols-2 gap-4 h-[140px]">
+      {/* Row 1: Add Entry + Progress Bar */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Add Entry Button / Form - 50% width */}
-        <div className="h-full">
+        <div className="min-h-[140px]">
           {!showLogForm ? (
             <Button
               onClick={() => setShowLogForm(true)}
@@ -181,11 +184,12 @@ export default function DashboardPage() {
               {formError && <div className="text-xs text-red-400 mb-2">{formError}</div>}
               <form onSubmit={handleSubmit} className="space-y-3">
                 {/* All 5 fields in one row */}
-                <div className="flex gap-2">
+                <div className="flex flex-col sm:flex-row gap-2">
                   <Input type="date" value={logDate} onChange={(e) => setLogDate(e.target.value)} className="flex-1 h-8 text-xs px-2 bg-white/10 border-white/20 text-white [&::-webkit-calendar-picker-indicator]:invert" />
                   <Input type="number" placeholder="Calories" value={logCalories} onChange={(e) => setLogCalories(e.target.value)} required className="flex-1 h-8 text-xs px-2 bg-white/10 border-white/20 text-white placeholder:text-white/50" />
                   <Input type="number" placeholder="Workout" value={logWorkout} onChange={(e) => setLogWorkout(e.target.value)} className="flex-1 h-8 text-xs px-2 bg-white/10 border-white/20 text-white placeholder:text-white/50" />
                   <Input type="number" step="0.1" placeholder="Weight" value={logWeight} onChange={(e) => setLogWeight(e.target.value)} className="flex-1 h-8 text-xs px-2 bg-white/10 border-white/20 text-white placeholder:text-white/50" />
+                  <Input type="number" placeholder="Protein (g)" value={logProtein} onChange={(e) => setLogProtein(e.target.value)} className="flex-1 h-8 text-xs px-2 bg-white/10 border-white/20 text-white placeholder:text-white/50" />
                   <Input placeholder="Notes" value={logNotes} onChange={(e) => setLogNotes(e.target.value)} className="flex-1 h-8 text-xs px-2 bg-white/10 border-white/20 text-white placeholder:text-white/50" />
                 </div>
                 <Button type="submit" disabled={isSubmitting} size="sm" className="h-8 text-xs w-full">
@@ -196,8 +200,8 @@ export default function DashboardPage() {
           )}
         </div>
 
-        {/* Progress Bar Card - 50% width */}
-        <Card className="bg-black/60 backdrop-blur border-white/20 rounded-none h-[140px]">
+        {/* Progress Bar Card */}
+        <Card className="bg-black/60 backdrop-blur border-white/20 rounded-none min-h-[140px]">
           <CardContent className="p-4 flex items-center h-full">
             <div className="flex-1 space-y-2">
               <div className="flex items-center justify-between">
@@ -222,8 +226,8 @@ export default function DashboardPage() {
         </Card>
       </div>
 
-      {/* Row 2: Three cards - Weight, Pace, Deficit */}
-      <div className="grid grid-cols-3 gap-4">
+      {/* Row 2: Four cards - Weight, Pace, Deficit, Protein */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Weight Journey Card */}
         <Card className="bg-black/60 backdrop-blur border-white/20 rounded-none">
           <CardContent className="p-4">
@@ -348,11 +352,55 @@ export default function DashboardPage() {
             </div>
           </CardContent>
         </Card>
+
+        {/* Protein Card */}
+        <Card className="bg-black/60 backdrop-blur border-white/20 rounded-none">
+          <CardContent className="p-4">
+            <div className="flex items-start justify-between mb-3">
+              <div>
+                <p className="text-xs text-white/70 uppercase tracking-wider mb-1">Protein</p>
+                <p className="text-3xl font-light text-white">
+                  {stats.protein.todayGrams != null ? stats.protein.todayGrams : "—"}
+                  <span className="text-lg text-white/70 ml-1">g</span>
+                </p>
+              </div>
+              <div className="relative">
+                <CircularProgress
+                  value={stats.protein.todayGrams ?? 0}
+                  max={stats.protein.target}
+                  color={stats.protein.todayRating === "excellent" ? "#22c55e" : stats.protein.todayRating === "good" ? "#3b82f6" : stats.protein.todayRating === "average" ? "#eab308" : stats.protein.todayRating === "below_average" ? "#f97316" : "#ef4444"}
+                />
+                <span className="absolute inset-0 flex items-center justify-center">
+                  <Beef className="w-4 h-4 text-white/70" />
+                </span>
+              </div>
+            </div>
+            <div className="space-y-2 text-sm">
+              <div className="flex justify-between">
+                <span className="text-white/70">Target</span>
+                <span className="text-white">{stats.protein.target}g ({stats.protein.targetGPerKg}g/kg)</span>
+              </div>
+              <MiniProgressBar
+                value={stats.protein.todayGrams ?? 0}
+                max={stats.protein.target}
+                color={stats.protein.todayGrams != null && stats.protein.todayGrams >= stats.protein.target ? "bg-green-500" : "bg-blue-500"}
+              />
+              <div className="flex justify-between">
+                <span className="text-white/70">Avg Daily</span>
+                <span className="text-white">{stats.protein.avgDaily}g</span>
+              </div>
+              <div className="flex justify-between text-xs text-white/50 pt-2 border-t border-white/10">
+                <span>{stats.protein.daysLogged} days tracked</span>
+                <span>{stats.protein.todayRating ? stats.protein.todayRating.replace("_", " ") : "—"}</span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Row 3: Four charts */}
       {chartData && (
-        <div className="grid grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
           <ActivityHeatmap data={chartData.heatmapData} daysToGoal={stats.pace.daysToGoal} />
           <ProgressChart data={chartData.progressData} />
           <WeightChart data={chartData.weightData} />

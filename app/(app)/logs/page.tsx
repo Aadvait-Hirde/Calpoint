@@ -14,6 +14,7 @@ interface DailyLog {
   caloriesConsumed: number;
   workoutCalories: number;
   weight: number | null;
+  proteinGrams: number | null;
   notes: string | null;
   dietPoints: number;
   workoutPoints: number;
@@ -31,6 +32,7 @@ export default function LogsPage() {
     caloriesConsumed: "",
     workoutCalories: "",
     weight: "",
+    proteinGrams: "",
     notes: "",
   });
 
@@ -64,6 +66,7 @@ export default function LogsPage() {
       caloriesConsumed: log.caloriesConsumed.toString(),
       workoutCalories: log.workoutCalories.toString(),
       weight: log.weight?.toString() || "",
+      proteinGrams: log.proteinGrams?.toString() || "",
       notes: log.notes || "",
     });
   };
@@ -78,6 +81,7 @@ export default function LogsPage() {
           caloriesConsumed: Number(editForm.caloriesConsumed),
           workoutCalories: Number(editForm.workoutCalories) || 0,
           weight: editForm.weight ? Number(editForm.weight) : undefined,
+          proteinGrams: editForm.proteinGrams ? Number(editForm.proteinGrams) : undefined,
           notes: editForm.notes || undefined,
         }),
       });
@@ -147,6 +151,7 @@ export default function LogsPage() {
                   <th className="text-right py-3 px-2 font-medium text-white/70">Daily</th>
                   <th className="text-right py-3 px-2 font-medium text-white/70">Running</th>
                   <th className="text-right py-3 px-2 font-medium text-white/70">Weight</th>
+                  <th className="text-right py-3 px-2 font-medium text-white/70">Protein</th>
                   <th className="text-left py-3 px-2 font-medium text-white/70">Notes</th>
                   <th className="py-3 px-2"></th>
                 </tr>
@@ -198,6 +203,18 @@ export default function LogsPage() {
                               setEditForm({ ...editForm, weight: e.target.value })
                             }
                             className="w-16 h-8 text-right bg-white/10 border-white/20 text-white"
+                            onClick={(e) => e.stopPropagation()}
+                          />
+                        </td>
+                        <td className="py-2 px-2">
+                          <Input
+                            type="number"
+                            value={editForm.proteinGrams}
+                            onChange={(e) =>
+                              setEditForm({ ...editForm, proteinGrams: e.target.value })
+                            }
+                            className="w-16 h-8 text-right bg-white/10 border-white/20 text-white"
+                            placeholder="g"
                             onClick={(e) => e.stopPropagation()}
                           />
                         </td>
@@ -260,6 +277,7 @@ export default function LogsPage() {
                           {log.runningTotal.toFixed(2)}
                         </td>
                         <td className="py-2 px-2 text-right text-white">{log.weight || "—"}</td>
+                        <td className="py-2 px-2 text-right text-white">{log.proteinGrams || "—"}</td>
                         <td className="py-2 px-2 max-w-[150px]">
                           {log.notes ? (
                             <span className="truncate block text-white/70" title={log.notes}>

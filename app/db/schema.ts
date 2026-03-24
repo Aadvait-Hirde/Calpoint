@@ -37,6 +37,7 @@ export const dailyLogs = pgTable("daily_logs", {
   caloriesConsumed: integer("calories_consumed").notNull(),
   workoutCalories: integer("workout_calories").notNull().default(0), // 0 if no workout
   weight: real("weight"), // Optional daily weight in kg
+  proteinGrams: integer("protein_grams"), // Optional daily protein intake in grams
   notes: text("notes"), // Optional notes
   
   // Calculated points (stored for quick queries)

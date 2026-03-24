@@ -67,7 +67,7 @@ export function calculateDailyPoints({ tdee, caloriesConsumed, workoutCalories }
   const dietPoints = calculateDietPoints(tdee, caloriesConsumed);
   const workoutPoints = calculateWorkoutPoints(workoutCalories);
   const totalPoints = dietPoints + workoutPoints;
-  
+
   return {
     dietPoints: Number(dietPoints.toFixed(3)),
     workoutPoints: Number(workoutPoints.toFixed(3)),
@@ -136,11 +136,11 @@ export function calculateAveragePointsPerDay(pointsCollected: number, daysElapse
 export function calculateProjectedCompletion({ startDate, pointsCollected, totalPointsNeeded }: ProjectionParams): Date | null {
   const daysElapsed = calculateDaysElapsed(startDate);
   if (daysElapsed === 0 || pointsCollected <= 0) return null;
-  
+
   const avgPointsPerDay = calculateAveragePointsPerDay(pointsCollected, daysElapsed);
   const pointsRemaining = totalPointsNeeded - pointsCollected;
   const daysRemaining = pointsRemaining / avgPointsPerDay;
-  
+
   const projectedDate = new Date();
   projectedDate.setDate(projectedDate.getDate() + Math.ceil(daysRemaining));
   return projectedDate;
@@ -192,7 +192,7 @@ export function calculateCalorieStats({
   const deficitCreated = pointsCollected * 1000;
   const deficitRemaining = totalDeficitNeeded - deficitCreated;
   const plannedDailyDeficit = tdee - targetCalories;
-  
+
   return {
     totalDeficitNeeded: Math.round(totalDeficitNeeded),
     deficitCreated: Math.round(deficitCreated),
@@ -201,4 +201,57 @@ export function calculateCalorieStats({
     tdee,
     targetCalories,
   };
+}
+
+// =============================================================================
+// PROTEIN TRACKING
+// =============================================================================
+
+/**
+ * Protein rating scale based on grams per kg of body weight:
+ *   < 0.8 g/kg  → "poor"
+ *   0.8–1.2 g/kg → "below_average"  
+ *   1.2–1.6 g/kg → "average"
+ *   1.6–2.0 g/kg → "good"
+ *   ≥ 2.0 g/kg  → "excellent"
+ *
+ * Target is set at 1.6 g/kg (the lower bound of "good").
+ */
+
+export type ProteinRating = "poor" | "below_average" | "average" | "good" | "excellent";
+
+const PROTEIN_TARGET_GRAMS_PER_KG = 1.6;
+
+export function getProteinTarget(bodyWeightKg: number): number {
+  return Math.round(bodyWeightKg * PROTEIN_TARGET_GRAMS_PER_KG);
+}
+
+export function rateProteinIntake(proteinGrams: number, bodyWeightKg: number): ProteinRating {
+  if (bodyWeightKg <= 0) return "poor";
+  const ratio = proteinGrams / bodyWeightKg;
+  if (ratio >= 2.0) return "excellent";
+  if (ratio >= 1.6) return "good";
+  if (ratio >= 1.2) return "average";
+  if (ratio >= 0.8) return "below_average";
+  return "poor";
+}
+
+export function getProteinRatingColor(rating: ProteinRating): string {
+  switch (rating) {
+    case "excellent": return "#22c55e"; // green
+    case "good": return "#3b82f6"; // blue
+    case "average": return "#eab308"; // yellow
+    case "below_average": return "#f97316"; // orange
+    case "poor": return "#ef4444"; // red
+  }
+}
+
+export function getProteinRatingLabel(rating: ProteinRating): string {
+  switch (rating) {
+    case "excellent": return "Excellent";
+    case "good": return "Good";
+    case "average": return "Average";
+    case "below_average": return "Below Avg";
+    case "poor": return "Poor";
+  }
 }

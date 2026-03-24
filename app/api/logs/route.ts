@@ -8,7 +8,7 @@ import { calculateDailyPoints } from "@/lib/calculations";
 export async function GET(request: Request) {
   try {
     const { userId } = await auth();
-    
+
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -50,7 +50,7 @@ export async function GET(request: Request) {
     const sortedLogs = [...logs].sort(
       (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
     );
-    
+
     let runningTotal = 0;
     const logsWithRunningTotal = sortedLogs.map((log) => {
       runningTotal += log.totalPoints;
@@ -70,7 +70,7 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const { userId } = await auth();
-    
+
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -84,7 +84,7 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
-    const { date, caloriesConsumed, workoutCalories = 0, weight, notes } = body;
+    const { date, caloriesConsumed, workoutCalories = 0, weight, proteinGrams, notes } = body;
 
     // Calculate points
     const points = calculateDailyPoints({
@@ -114,6 +114,7 @@ export async function POST(request: Request) {
         caloriesConsumed,
         workoutCalories,
         weight,
+        proteinGrams: proteinGrams ?? null,
         notes,
         dietPoints: points.dietPoints,
         workoutPoints: points.workoutPoints,
@@ -139,7 +140,7 @@ export async function POST(request: Request) {
 export async function PATCH(request: Request) {
   try {
     const { userId } = await auth();
-    
+
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -153,7 +154,7 @@ export async function PATCH(request: Request) {
     }
 
     const body = await request.json();
-    const { id, caloriesConsumed, workoutCalories, weight, notes } = body;
+    const { id, caloriesConsumed, workoutCalories, weight, proteinGrams, notes } = body;
 
     // Recalculate points
     const points = calculateDailyPoints({
@@ -168,6 +169,7 @@ export async function PATCH(request: Request) {
         caloriesConsumed,
         workoutCalories: workoutCalories || 0,
         weight,
+        proteinGrams: proteinGrams ?? null,
         notes,
         dietPoints: points.dietPoints,
         workoutPoints: points.workoutPoints,
@@ -205,7 +207,7 @@ export async function PATCH(request: Request) {
 export async function DELETE(request: Request) {
   try {
     const { userId } = await auth();
-    
+
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
