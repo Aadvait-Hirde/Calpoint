@@ -78,6 +78,7 @@ export default function DashboardPage() {
   const [logWeight, setLogWeight] = useState("");
   const [logNotes, setLogNotes] = useState("");
   const [logProtein, setLogProtein] = useState("");
+  const [proteinPeriod, setProteinPeriod] = useState<"daily" | "weekly" | "monthly" | "allTime">("weekly");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formError, setFormError] = useState("");
 
@@ -360,20 +361,41 @@ export default function DashboardPage() {
               <div>
                 <p className="text-xs text-white/70 uppercase tracking-wider mb-1">Protein</p>
                 <p className="text-3xl font-light text-white">
-                  {stats.protein.todayGrams != null ? stats.protein.todayGrams : "—"}
+                  {stats.protein.averages[proteinPeriod] > 0 ? stats.protein.averages[proteinPeriod] : "—"}
                   <span className="text-lg text-white/70 ml-1">g</span>
                 </p>
               </div>
               <div className="relative">
                 <CircularProgress
-                  value={stats.protein.todayGrams ?? 0}
+                  value={stats.protein.averages[proteinPeriod]}
                   max={stats.protein.target}
-                  color={stats.protein.todayRating === "excellent" ? "#22c55e" : stats.protein.todayRating === "good" ? "#3b82f6" : stats.protein.todayRating === "average" ? "#eab308" : stats.protein.todayRating === "below_average" ? "#f97316" : "#ef4444"}
+                  color={
+                    stats.protein.ratings[proteinPeriod] === "excellent" ? "#22c55e" :
+                    stats.protein.ratings[proteinPeriod] === "good" ? "#3b82f6" :
+                    stats.protein.ratings[proteinPeriod] === "average" ? "#eab308" :
+                    stats.protein.ratings[proteinPeriod] === "below_average" ? "#f97316" : "#ef4444"
+                  }
                 />
                 <span className="absolute inset-0 flex items-center justify-center">
                   <Beef className="w-4 h-4 text-white/70" />
                 </span>
               </div>
+            </div>
+            {/* Period toggle */}
+            <div className="flex gap-1 mb-3">
+              {(["daily", "weekly", "monthly", "allTime"] as const).map((p) => (
+                <button
+                  key={p}
+                  onClick={() => setProteinPeriod(p)}
+                  className={`flex-1 text-[10px] py-1 rounded-sm transition-colors ${
+                    proteinPeriod === p
+                      ? "bg-white/20 text-white"
+                      : "text-white/50 hover:text-white/70"
+                  }`}
+                >
+                  {p === "allTime" ? "All" : p === "daily" ? "Today" : p === "weekly" ? "Week" : "Month"}
+                </button>
+              ))}
             </div>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
@@ -381,17 +403,13 @@ export default function DashboardPage() {
                 <span className="text-white">{stats.protein.target}g ({stats.protein.targetGPerKg}g/kg)</span>
               </div>
               <MiniProgressBar
-                value={stats.protein.todayGrams ?? 0}
+                value={stats.protein.averages[proteinPeriod]}
                 max={stats.protein.target}
-                color={stats.protein.todayGrams != null && stats.protein.todayGrams >= stats.protein.target ? "bg-green-500" : "bg-blue-500"}
+                color={stats.protein.averages[proteinPeriod] >= stats.protein.target ? "bg-green-500" : "bg-blue-500"}
               />
-              <div className="flex justify-between">
-                <span className="text-white/70">Avg Daily</span>
-                <span className="text-white">{stats.protein.avgDaily}g</span>
-              </div>
               <div className="flex justify-between text-xs text-white/50 pt-2 border-t border-white/10">
                 <span>{stats.protein.daysLogged} days tracked</span>
-                <span>{stats.protein.todayRating ? stats.protein.todayRating.replace("_", " ") : "—"}</span>
+                <span>{stats.protein.ratings[proteinPeriod]?.replace("_", " ") ?? "—"}</span>
               </div>
             </div>
           </CardContent>

@@ -123,21 +123,45 @@ export async function GET() {
     });
     const proteinLogs = allLogs.filter((l) => l.proteinGrams != null && l.proteinGrams > 0);
     const proteinTarget = getProteinTarget(profile.currentWeight);
-    const avgProtein = proteinLogs.length > 0
-      ? Math.round(proteinLogs.reduce((s, l) => s + (l.proteinGrams ?? 0), 0) / proteinLogs.length)
-      : 0;
-    const todayStr = new Date().toISOString().split("T")[0];
-    const todayLog = allLogs.find((l) => l.date === todayStr);
-    const todayProtein = todayLog?.proteinGrams ?? null;
-    const todayRating = todayProtein != null
-      ? rateProteinIntake(todayProtein, profile.currentWeight)
-      : null;
-    // Rating distribution for logged days
-    const ratingCounts = { excellent: 0, good: 0, average: 0, below_average: 0, poor: 0 };
-    for (const l of proteinLogs) {
-      const r = rateProteinIntake(l.proteinGrams!, profile.currentWeight);
-      ratingCounts[r]++;
-    }
+
+    // Helper: average protein for a filtered set of logs
+    const avgOf = (logs: typeof proteinLogs) =>
+      logs.length > 0
+        ? Math.round(logs.reduce((s, l) => s + (l.proteinGrams ?? 0), 0) / logs.length)
+        : 0;
+
+    // Time boundaries
+    const nowDate = new Date();
+    const todayStr = nowDate.toISOString().split("T")[0];
+    const weekAgo = new Date(nowDate);
+    weekAgo.setDate(weekAgo.getDate() - 7);
+    const monthAgo = new Date(nowDate);
+    monthAgo.setDate(monthAgo.getDate() - 30);
+
+    const weekAgoStr = weekAgo.toISOString().split("T")[0];
+    const monthAgoStr = monthAgo.toISOString().split("T")[0];
+
+    const todayLogs = proteinLogs.filter((l) => String(l.date) === todayStr);
+    const weeklyLogs = proteinLogs.filter((l) => String(l.date) >= weekAgoStr);
+    const monthlyLogs = proteinLogs.filter((l) => String(l.date) >= monthAgoStr);
+
+    const proteinAverages = {
+      daily: avgOf(todayLogs),       // today's protein (single day)
+      weekly: avgOf(weeklyLogs),     // avg over last 7 days
+      monthly: avgOf(monthlyLogs),   // avg over last 30 days
+      allTime: avgOf(proteinLogs),   // avg over all logged days
+    };
+
+    // Rating for each period
+    const ratingFor = (avg: number) =>
+      avg > 0 ? rateProteinIntake(avg, profile.currentWeight) : null;
+
+    const proteinRatings = {
+      daily: ratingFor(proteinAverages.daily),
+      weekly: ratingFor(proteinAverages.weekly),
+      monthly: ratingFor(proteinAverages.monthly),
+      allTime: ratingFor(proteinAverages.allTime),
+    };
 
     return NextResponse.json({
       mode: isMaintenance ? "maintenance" : isCutting ? "cutting" : "bulking",
@@ -176,11 +200,9 @@ export async function GET() {
         target: proteinTarget,
         targetGPerKg: 1.6,
         currentWeight: profile.currentWeight,
-        avgDaily: avgProtein,
         daysLogged: proteinLogs.length,
-        todayGrams: todayProtein,
-        todayRating,
-        ratingCounts,
+        averages: proteinAverages,
+        ratings: proteinRatings,
       },
     });
   } catch (error) {

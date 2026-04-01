@@ -39,16 +39,18 @@ export interface Stats {
     target: number;
     targetGPerKg: number;
     currentWeight: number;
-    avgDaily: number;
     daysLogged: number;
-    todayGrams: number | null;
-    todayRating: string | null;
-    ratingCounts: {
-      excellent: number;
-      good: number;
-      average: number;
-      below_average: number;
-      poor: number;
+    averages: {
+      daily: number;
+      weekly: number;
+      monthly: number;
+      allTime: number;
+    };
+    ratings: {
+      daily: string | null;
+      weekly: string | null;
+      monthly: string | null;
+      allTime: string | null;
     };
   };
 }
